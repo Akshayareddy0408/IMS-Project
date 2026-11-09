@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import complaintsRouter from "./routes/complaints.js";
 import resourcesRouter from "./routes/resources.js";
 import dashboardRouter from "./routes/dashboard.js";
@@ -41,9 +43,18 @@ app.use("/api/staff", requireAuth, staffRouter);
 app.use("/api/notifications", requireAuth, notificationsRouter);
 app.use("/api/rooms", requireAuth, createRoomsRouter(roomService));
 app.use("/api/activity", requireAuth, activityRouter);
-app.use((_req, res) =>
+app.use("/api", (_req, res) =>
   res.status(404).json({ message: "API endpoint not found." })
 );
+
+const frontendDist = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../frontend/dist");
+app.use(express.static(frontendDist));
+app.get("*", (_req, res, next) => {
+  res.sendFile(path.join(frontendDist, "index.html"), error => {
+    if (error) next(error);
+  });
+});
+app.use((_req, res) => res.status(404).json({ message: "Page not found." }));
 
 app.use((error: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (res.headersSent) return next(error);
