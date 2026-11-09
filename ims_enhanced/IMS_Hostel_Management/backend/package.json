@@ -1,0 +1,22 @@
+{
+  "name": "ims-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20 <23" },
+  "scripts": { "dev": "tsx watch src/server.ts", "build": "tsc && tsc -p tsconfig.tools.json", "start": "node dist/server.js", "test": "tsx --test tests/auth-workflows.test.ts tests/rooms-routes.test.ts tests/async-errors.test.ts", "provision:admin": "tsx scripts/provision-admin.ts", "cleanup:test-accounts": "tsx scripts/cleanup-test-accounts.ts" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
